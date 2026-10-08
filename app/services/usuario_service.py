@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 
 class UsuarioService:
     
-    def __init__(self, repository) -> None:
+    def __init__(self, repository):
         self.repository = repository
     
     
