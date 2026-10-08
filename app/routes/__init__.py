@@ -1,0 +1,1 @@
+from .usuario_route import bp as bp_usuario
