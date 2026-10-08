@@ -1,11 +1,10 @@
 from models import Usuario
 from sqlalchemy import select
-from sqlalchemy.orm import scoped_session
 
 
 class UsuarioRepository:
 
-    def __init__(self, session: scoped_session):
+    def __init__(self, session):
         self.session = session
 
 
@@ -36,9 +35,9 @@ class UsuarioRepository:
         self.session.add(usuario)
 
     
-    def commit(self) -> None:
+    def commit(self):
         self.session.commit()
     
     
-    def rollback(self) -> None:
+    def rollback(self):
         self.session.rollback()
