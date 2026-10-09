@@ -8,7 +8,7 @@ from extensions import db
 bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
-@bp.route("/login", methods=["POST"])
+@bp.route("", methods=["POST"])
 def login():
     repository = UsuarioRepository(db.session)
     service = AuthService(repository)
