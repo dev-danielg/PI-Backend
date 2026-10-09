@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_cors import CORS
-from models import Usuario
 import os
 from dotenv import load_dotenv
 from extensions import db, jwt
@@ -22,7 +21,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
-
+    from models import Usuario, Registro, Lote, Sensor
     with app.app_context():
         db.create_all()
     
