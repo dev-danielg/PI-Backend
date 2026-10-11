@@ -1,9 +1,9 @@
-from repositories import UsuarioRepository
-from services import UsuarioService
-from controllers import UsuarioController
+from app.repositories import UsuarioRepository
+from app.services import UsuarioService
+from app.controllers import UsuarioController
 from flask import Blueprint
-from extensions import db
-from middlewares import verificar_role
+from app.extensions import db
+from app.middlewares import verificar_role
 
 
 bp = Blueprint("usuario", __name__, url_prefix="/api/usuarios")

@@ -1,4 +1,4 @@
-from extension import Base
+from app.extensions import Base
 from sqlalchemy import String, Integer, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 

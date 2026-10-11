@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from .extensions import db, jwt
+from app.extensions import db, jwt
 from datetime import timedelta
 
 
@@ -21,12 +21,12 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
-    from models import Usuario, Registro, Lote, Sensor
+    from app.models import Usuario, Registro, Lote, Sensor
     with app.app_context():
         db.create_all()
     
     
-    from routes import bp_auth, bp_usuario
+    from app.routes import bp_auth, bp_usuario
     app.register_blueprint(bp_usuario)
     app.register_blueprint(bp_auth)
     
