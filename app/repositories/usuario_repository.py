@@ -18,8 +18,15 @@ class UsuarioRepository:
         return self.session.execute(query).scalar_one_or_none()
 
     
-    def buscar_todos(self):
+    def buscar_todos(self, nome=None, email=None, tipo=None):
         query = select(Usuario)
+        if nome:
+            query = query.where(Usuario.nome.ilike(nome))
+        if email:
+            query = query.where(Usuario.email.ilike(email))
+        if tipo:
+            query = query.where(Usuario.tipo.ilike(tipo))
+            
         return self.session.execute(query).scalars().all()
     
     
