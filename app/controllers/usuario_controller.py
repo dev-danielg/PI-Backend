@@ -17,10 +17,10 @@ class UsuarioController:
                 "message": str(e)
             }, 400
         
-        except Exception:
+        except Exception as e:
             return {
                 "success": False,
-                "message": "Erro interno no servidor."
+                "message": str(e)
             }, 500
         
         return {
@@ -29,7 +29,40 @@ class UsuarioController:
             "data": {
                 "id": usuario.id,
                 "nome": usuario.nome,
-                "email": usuario.email
+                "email": usuario.email,
+                "tipo": usuario.tipo
             }
         }, 201
         
+    
+    def buscar_todos(self):
+        nome = request.args.get("nome")
+        email = request.args.get("email")
+        tipo = request.args.get("tipo")
+        
+        try:
+            usuarios = self.service.buscar_todos(nome, email, tipo)
+
+        except LookupError as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }
+            
+        return {
+            "success": True,
+            "message": "Usuários buscados com sucesso.",
+            "data": [{
+                "id": usuario.id,
+                "nome": usuario.nome,
+                "email": usuario.email,
+                "tipo": usuario.tipo
+            } for usuario in usuarios]
+        }
+            
