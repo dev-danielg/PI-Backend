@@ -95,4 +95,31 @@ class UsuarioController:
             }
         }, 200
         
+    
+    def atualizar(self, id):
+        try: 
+            usuario = self.service.atualizar(id)
+        
+        except LookupError as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }, 404
+        
+        except Exception as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }, 500
             
+        return {
+            "success": True,
+            "message": "Usuário atualizado com sucesso.",
+            "data": {
+                "id": usuario.id,
+                "nome": usuario.nome,
+                "email": usuario.email,
+                "tipo": usuario.tipo
+            }
+        }, 200
+        
