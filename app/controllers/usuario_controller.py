@@ -6,7 +6,8 @@ class UsuarioController:
     def __init__(self, repository, service):
         self.repository = repository
         self.service = service
-        
+    
+    
     def cadastrar(self):
         try:
             usuario = self.service.cadastrar(request.get_json())
@@ -47,13 +48,13 @@ class UsuarioController:
             return {
                 "success": False,
                 "message": str(e)
-            }
+            }, 404
             
         except Exception as e:
             return {
                 "success": False,
                 "message": str(e)
-            }
+            }, 500
             
         return {
             "success": True,
@@ -64,5 +65,34 @@ class UsuarioController:
                 "email": usuario.email,
                 "tipo": usuario.tipo
             } for usuario in usuarios]
-        }
+        }, 200
+        
+    
+    def deletar(self, id):
+        try:
+            usuario = self.service.deletar(id)
+        
+        except LookupError as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }, 404
+        
+        except Exception as e:
+            return {
+                "success": False,
+                "message": str(e)
+            }, 500
+        
+        return {
+            "success": True,
+            "message": "Usuário deletado com sucesso.",
+            "data": {
+                "id": usuario.id,
+                "nome": usuario.nome,
+                "email": usuario.email,
+                "tipo": usuario.tipo
+            }
+        }, 200
+        
             
