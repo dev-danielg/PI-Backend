@@ -16,3 +16,27 @@ def cadastrar():
     service = UsuarioService(repository)
     controller = UsuarioController(repository, service)
     return controller.cadastrar()
+
+
+@bp.route("", methods=["GET"])
+def buscar_todos():
+    repository = UsuarioRepository(db.session)
+    service = UsuarioService(repository)
+    controller = UsuarioController(repository, service)
+    return controller.buscar_todos()
+
+
+@bp.route("/<int:id_usuario>", methods=["DELETE"])
+def deletar(id_usuario):
+    repository = UsuarioRepository(db.session)
+    service = UsuarioService(repository)
+    controller = UsuarioController(repository, service)
+    return controller.deletar(id_usuario)
+
+
+@bp.route("/<int:id_usuario>", methods=["PUT"])
+def atualizar(id_usuario):
+    repository = UsuarioRepository(db.session)
+    service = UsuarioService(repository)
+    controller = UsuarioController(repository, service)
+    return controller.atualizar(id_usuario)
