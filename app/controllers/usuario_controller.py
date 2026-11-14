@@ -98,7 +98,7 @@ class UsuarioController:
     
     def atualizar(self, id):
         try: 
-            usuario = self.service.atualizar(id)
+            usuario = self.service.atualizar(id, request.get_json())
         
         except LookupError as e:
             return {

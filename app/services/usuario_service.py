@@ -72,8 +72,21 @@ class UsuarioService:
             raise
 
 
-    def atualizar(self, id):
+    def atualizar(self, id, dados):
         usuario = self.buscar_por_id(id)
+        nome = dados.get("nome")
+        email = dados.get("email")
+        senha = dados.get("senha")
+        tipo = dados.get("tipo")
+        
+        if nome:
+            usuario.nome = nome
+        if email:
+            usuario.email = email
+        if senha:
+            usuario.senha = generate_password_hash(senha)
+        if tipo:
+            usuario.tipo = tipo
         
         try:
             self.repository.atualizar(usuario)
