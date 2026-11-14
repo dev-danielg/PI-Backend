@@ -21,11 +21,11 @@ class UsuarioRepository:
     def buscar_todos(self, nome=None, email=None, tipo=None):
         query = select(Usuario)
         if nome:
-            query = query.where(Usuario.nome.ilike(nome))
+            query = query.where(Usuario.nome.ilike(f"{nome}%"))
         if email:
-            query = query.where(Usuario.email.ilike(email))
+            query = query.where(Usuario.email.ilike(f"{email}%"))
         if tipo:
-            query = query.where(Usuario.tipo.ilike(tipo))
+            query = query.where(Usuario.tipo.ilike(f"{tipo}%"))
             
         return self.session.execute(query).scalars().all()
     
