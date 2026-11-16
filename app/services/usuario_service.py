@@ -39,10 +39,3 @@ class UsuarioService:
         except Exception:
             self.repository.rollback()
             raise
-            
-            
-        
-            
-        
-        
-         

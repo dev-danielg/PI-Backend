@@ -1,7 +1,7 @@
+from datetime import datetime
 from app.extensions import Base
 from sqlalchemy import String, Integer, DateTime, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime
 
 
 class Registro(Base):

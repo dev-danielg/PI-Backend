@@ -10,7 +10,7 @@ bp = Blueprint("usuario", __name__, url_prefix="/api/usuarios")
 
 
 @bp.route("", methods=["POST"])
-@verificar_role("admin")
+#@verificar_role("admin")
 def cadastrar():
     repository = UsuarioRepository(db.session)
     service = UsuarioService(repository)

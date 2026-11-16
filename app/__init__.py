@@ -1,33 +1,42 @@
+import os
+from datetime import timedelta
+
 from flask import Flask
 from flask_cors import CORS
-import os
 from dotenv import load_dotenv
+
 from app.extensions import db, jwt
-from datetime import timedelta
 
 
 def create_app():
-    
     app = Flask(__name__)
     CORS(app)
-
 
     load_dotenv()
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("MYSQL_URI")
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 
-
     db.init_app(app)
     jwt.init_app(app)
 
-    from app.models import Usuario, Registro, Lote, Sensor
+    from app import models
+
     with app.app_context():
         db.create_all()
-    
-    
-    from app.routes import bp_auth, bp_usuario
+
+    from app.routes import (
+        bp_auth,
+        bp_usuario,
+        bp_lotes,
+        bp_sensores,
+        bp_registros,
+    )
+
     app.register_blueprint(bp_usuario)
     app.register_blueprint(bp_auth)
-    
+    app.register_blueprint(bp_lotes)
+    app.register_blueprint(bp_sensores)
+    app.register_blueprint(bp_registros)
+
     return app
