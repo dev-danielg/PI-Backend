@@ -30,7 +30,8 @@ class AuthController:
             "data": {
                 "usuario": usuario.nome,
                 "email": usuario.email,
-                "access_token": create_access_token(identity=str(usuario.id))
+                "access_token": create_access_token(identity=str(usuario.id), 
+                                                    additional_claims={"role": usuario.tipo})
             }
         }, 200
         
