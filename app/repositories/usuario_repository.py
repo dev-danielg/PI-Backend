@@ -1,4 +1,4 @@
-from models import Usuario
+from app.models import Usuario
 from sqlalchemy import select
 
 

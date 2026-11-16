@@ -1,8 +1,8 @@
 from flask import Blueprint
-from repositories import UsuarioRepository
-from services import AuthService
-from controllers import AuthController
-from extensions import db
+from app.repositories import UsuarioRepository
+from app.services import AuthService
+from app.controllers import AuthController
+from app.extensions import db
 
 
 bp = Blueprint("auth", __name__, url_prefix="/api/auth")
