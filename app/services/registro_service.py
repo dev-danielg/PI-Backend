@@ -31,15 +31,16 @@ class RegistroService:
         except (TypeError, ValueError, AttributeError):
             raise ValueError("tempo_registro deve ser uma data/hora válida (ISO 8601).")
 
-    def _calcular_status(self, umidade, temperatura, lote):
+    def _calcular_status(self, umidade_ar, temperatura, umidade_solo lote):
         """Calcula status com base nas faixas ideais do lote."""
         if lote is None:
             return "desconhecido"
 
-        umidade_ok = lote.umidade_ideal_min <= umidade <= lote.umidade_ideal_max
+        umidade_ar_ok = lote.umidade_ar_ideal_min <= umidade_ar <= lote.umidade_ar_ideal_max
         temp_ok = lote.temp_ideal_min <= temperatura <= lote.temp_ideal_max
+        umidade_solo_ok = lote.umidade_solo_ideal_min <= umidade_solo <= lote.umidade_solo_ideal_max
 
-        return "ok" if (umidade_ok and temp_ok) else "alerta"
+        return "ok" if (umidade_ar_ok and temp_ok and umidade_solo_ok) else "alerta"
 
     def _validar_sensor(self, sensor_id):
         try:
@@ -66,7 +67,8 @@ class RegistroService:
                     "created_at": "2026-11-06T14:30:00Z",
                     "entry_id": 123,
                     "field1": "65.5",   # umidade
-                    "field2": "22.3"    # temperatura_celsius
+                    "field2": "22.3",    # temperatura_celsius
+                    "field3": "60.2"    # umidade_solo
                 }
             ]
         }
@@ -77,30 +79,36 @@ class RegistroService:
 
         feed = feeds[0]
 
-        field_umidade = os.getenv("THINGSPEAK_FIELD_UMIDADE", "field2")
-        field_temperatura = os.getenv("THINGSPEAK_FIELD_TEMPERATURA", "field1")
+        field_umidade_ar = os.getenv("THINGSPEAK_FIELD_UMIDADE_AR", "field1")
+        field_temperatura = os.getenv("THINGSPEAK_FIELD_TEMPERATURA", "field2")
+        field_umidade_solo = os.getenv("THINGSPEAK_FIELD_UMIDADE_SOLo", "field3")
 
-        umidade_raw = feed.get(field_umidade)
+        umidade_ar_raw = feed.get(field_umidade_ar)
         temperatura_raw = feed.get(field_temperatura)
+        umidade_solo_raw = feed.get(field_umidade_solo)
         created_at = feed.get("created_at")
 
-        if umidade_raw is None:
-            raise ValueError(f"{field_umidade} (umidade) ausente no feed do ThingSpeak.")
+        if umidade_ar_raw is None:
+            raise ValueError(f"{field_umidade_ar} (umidade) ausente no feed do ThingSpeak.")
         if temperatura_raw is None:
             raise ValueError(f"{field_temperatura} (temperatura) ausente no feed do ThingSpeak.")
+        if umidade_solo_raw is None:
+            raise ValueError(f"{field_umidade_solo} (umidade) ausente no feed do ThingSpeak.")
 
-        umidade = self._converter_float(umidade_raw, "umidade")
+        umidade_ar = self._converter_float(umidade_ar_raw, "umidade_ar")
         temperatura = self._converter_float(temperatura_raw, "temperatura_celsius")
+        umidade_solo = self._converter_float(umidade_solo_raw, "umidade_solo")
         tempo_registro = self._parse_datetime(created_at)
 
         sensor = self._validar_sensor(sensor_id)
 
         lote = self.lote_repository.buscar_por_id(sensor.lote_id)
-        status = self._calcular_status(umidade, temperatura, lote)
+        status = self._calcular_status(umidade_ar, temperatura, umidade_solo, lote)
 
         registro = Registro(
-            umidade=umidade,
+            umidade_ar=umidade_ar,
             temperatura_celsius=temperatura,
+            umidade_solo=umidade_solo,
             status=status,
             tempo_registro=tempo_registro,
             sensor_id=sensor.id
@@ -146,8 +154,9 @@ class RegistroService:
 
     def criar(self, dados):
         """Criação manual (sem ThingSpeak), útil para testes ou fallback."""
-        umidade = self._converter_float(dados.get("umidade"), "umidade")
+        umidade_ar = self._converter_float(dados.get("umidade_ar"), "umidade_ar")
         temperatura = self._converter_float(dados.get("temperatura_celsius"), "temperatura_celsius")
+        umidade_solo = self._converter_float(dados.get("umidade_solo"), "umidade_solo")
 
         status = (dados.get("status") or "").strip()
         if not status:
@@ -157,8 +166,9 @@ class RegistroService:
         sensor = self._validar_sensor(dados.get("sensor_id"))
 
         registro = Registro(
-            umidade=umidade,
+            umidade_ar=umidade_ar,
             temperatura_celsius=temperatura,
+            umidade_solo=umidade_solo,
             status=status,
             tempo_registro=tempo_registro,
             sensor_id=sensor.id
@@ -186,12 +196,14 @@ class RegistroService:
         if registro is None:
             raise ValueError("Registro não encontrado.")
 
-        if "umidade" in dados:
-            registro.umidade = self._converter_float(dados["umidade"], "umidade")
+        if "umidade_ar" in dados:
+            registro.umidade_ar = self._converter_float(dados["umidade_ar"], "umidade_ar")
         if "temperatura_celsius" in dados:
             registro.temperatura_celsius = self._converter_float(
                 dados["temperatura_celsius"], "temperatura_celsius"
             )
+        if "umidade_solo" in dados:
+            registro.umidade_solo = self._converter_float(dados["umidade_solo"], "umidade_solo")
         if "status" in dados:
             status = (dados.get("status") or "").strip()
             if not status:
