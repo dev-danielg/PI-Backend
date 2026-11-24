@@ -13,12 +13,16 @@ class LoteService:
         except (TypeError, ValueError):
             raise ValueError(f"{campo} deve ser um valor numérico.")
 
-    def _validar_faixas(self, temp_min, temp_max, umid_min, umid_max):
+    def _validar_faixas(self, temp_min, temp_max, umid_ar_min, umid_ar_max, umid_solo_min, umid_solo_max):
         if temp_min > temp_max:
             raise ValueError("temp_ideal_min não pode ser maior que temp_ideal_max.")
-        if umid_min > umid_max:
+        if umid_ar_min > umid_ar_max:
             raise ValueError("umidade_ideal_min não pode ser maior que umidade_ideal_max.")
-        if umid_min < 0 or umid_max > 100:
+        if umid_ar_min < 0 or umid_ar_max > 100:
+            raise ValueError("Umidade deve estar entre 0 e 100.")
+        if umid_solo_min > umid_solo_max:
+            raise ValueError("umidade_ideal_min não pode ser maior que umidade_ideal_max.")
+        if umid_solo_min < 0 or umid_solo_max > 100:
             raise ValueError("Umidade deve estar entre 0 e 100.")
 
     def _buscar_usuario(self, email):
@@ -40,8 +44,10 @@ class LoteService:
 
         temp_ideal_min = self._converter_float(dados.get("temp_ideal_min"), "temp_ideal_min")
         temp_ideal_max = self._converter_float(dados.get("temp_ideal_max"), "temp_ideal_max")
-        umidade_ideal_min = self._converter_float(dados.get("umidade_ideal_min"), "umidade_ideal_min")
-        umidade_ideal_max = self._converter_float(dados.get("umidade_ideal_max"), "umidade_ideal_max")
+        umidade_ar_ideal_min = self._converter_float(dados.get("umidade_ar_ideal_min"), "umidade_ar_ideal_min")
+        umidade_ar_ideal_max = self._converter_float(dados.get("umidade_ar_ideal_max"), "umidade_ar_ideal_max")
+        umidade_solo_ideal_min = self._converter_float(dados.get("umidade_solo_ideal_min"), "umidade_solo_ideal_min")
+        umidade_solo_ideal_max = self._converter_float(dados.get("umidade_solo_ideal_max"), "umidade_solo_ideal_max")
 
         self._validar_faixas(temp_ideal_min, temp_ideal_max, umidade_ideal_min, umidade_ideal_max)
 
@@ -52,8 +58,10 @@ class LoteService:
             status=status,
             temp_ideal_min=temp_ideal_min,
             temp_ideal_max=temp_ideal_max,
-            umidade_ideal_min=umidade_ideal_min,
-            umidade_ideal_max=umidade_ideal_max,
+            umidade_ar_ideal_min=umidade_ar_ideal_min,
+            umidade_ar_ideal_max=umidade_ar_ideal_max,
+            umidade_solo_ideal_min=umidade_solo_ideal_min,
+            umidade_solo_ideal_max=umidade_solo_ideal_max,
             usuario_id=usuario.id
         )
 
@@ -92,14 +100,20 @@ class LoteService:
             lote.temp_ideal_min = self._converter_float(dados["temp_ideal_min"], "temp_ideal_min")
         if "temp_ideal_max" in dados:
             lote.temp_ideal_max = self._converter_float(dados["temp_ideal_max"], "temp_ideal_max")
-        if "umidade_ideal_min" in dados:
-            lote.umidade_ideal_min = self._converter_float(dados["umidade_ideal_min"], "umidade_ideal_min")
-        if "umidade_ideal_max" in dados:
-            lote.umidade_ideal_max = self._converter_float(dados["umidade_ideal_max"], "umidade_ideal_max")
+        if "umidade_ar_ideal_min" in dados:
+            lote.umidade_ar_ideal_min = self._converter_float(dados["umidade_ar_ideal_min"], "umidade_ar_ideal_min")
+        if "umidade_ar_ideal_max" in dados:
+            lote.umidade_ar_ideal_max = self._converter_float(dados["umidade_ar_ideal_max"], "umidade_ar_ideal_max")
+        if "umidade_solo_ideal_min" in dados:
+            lote.umidade_solo_ideal_min = self._converter_float(dados["umidade_solo_ideal_min"], "umidade_solo_ideal_min")
+        if "umidade_solo_ideal_max" in dados:
+            lote.umidade_solo_ideal_max = self._converter_float(dados["umidade_solo_ideal_max"], "umidade_solo_ideal_max")
 
         self._validar_faixas(
             lote.temp_ideal_min, lote.temp_ideal_max,
-            lote.umidade_ideal_min, lote.umidade_ideal_max
+            lote.umidade_ar_ideal_min, lote.umidade_ar_ideal_max,
+            lote.umidade_solo_ideal_min, lote.umidade_solo_ideal_max
+
         )
 
         if "usuario_email" in dados:
