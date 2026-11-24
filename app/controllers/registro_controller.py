@@ -9,7 +9,8 @@ class RegistroController:
     def _serializar(self, registro):
         return {
             "id": registro.id,
-            "umidade": registro.umidade,
+            "umidade_ar": registro.umidade_ar,
+            "umidade_solo": registro.umidade_solo,
             "temperatura_celsius": registro.temperatura_celsius,
             "status": registro.status,
             "tempo_registro": registro.tempo_registro.isoformat()

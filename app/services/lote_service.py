@@ -49,7 +49,11 @@ class LoteService:
         umidade_solo_ideal_min = self._converter_float(dados.get("umidade_solo_ideal_min"), "umidade_solo_ideal_min")
         umidade_solo_ideal_max = self._converter_float(dados.get("umidade_solo_ideal_max"), "umidade_solo_ideal_max")
 
-        self._validar_faixas(temp_ideal_min, temp_ideal_max, umidade_ideal_min, umidade_ideal_max)
+        self._validar_faixas(
+            temp_ideal_min, temp_ideal_max,
+            umidade_ar_ideal_min, umidade_ar_ideal_max,
+            umidade_solo_ideal_min, umidade_solo_ideal_max,
+        )
 
         usuario = self._buscar_usuario(dados.get("usuario_email"))
 

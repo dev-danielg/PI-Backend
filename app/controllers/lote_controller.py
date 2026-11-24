@@ -13,8 +13,10 @@ class LoteController:
             "status": lote.status,
             "temp_ideal_min": lote.temp_ideal_min,
             "temp_ideal_max": lote.temp_ideal_max,
-            "umidade_ideal_min": lote.umidade_ideal_min,
-            "umidade_ideal_max": lote.umidade_ideal_max,
+            "umidade_ar_ideal_min": lote.umidade_ar_ideal_min,
+            "umidade_ar_ideal_max": lote.umidade_ar_ideal_max,
+            "umidade_solo_ideal_min": lote.umidade_solo_ideal_min,
+            "umidade_solo_ideal_max": lote.umidade_solo_ideal_max,
             "usuario_id": lote.usuario_id,
         }
 

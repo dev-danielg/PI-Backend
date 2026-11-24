@@ -31,7 +31,7 @@ class RegistroService:
         except (TypeError, ValueError, AttributeError):
             raise ValueError("tempo_registro deve ser uma data/hora válida (ISO 8601).")
 
-    def _calcular_status(self, umidade_ar, temperatura, umidade_solo lote):
+    def _calcular_status(self, umidade_ar, temperatura, umidade_solo, lote):
         """Calcula status com base nas faixas ideais do lote."""
         if lote is None:
             return "desconhecido"
