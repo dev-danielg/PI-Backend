@@ -131,8 +131,6 @@ class AuthService:
         return usuario
 
     def _validar_codigo(self, usuario, codigo):
-        """Aceita 1 passo (30s) para trás/frente e recusa código já usado.
-        Quem chama faz o commit."""
         codigo = str(codigo).strip()
         if not codigo.isdigit() or len(codigo) != 6:
             return False
