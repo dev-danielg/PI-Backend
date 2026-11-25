@@ -39,3 +39,73 @@ class UsuarioService:
         except Exception:
             self.repository.rollback()
             raise
+    
+    
+    def buscar_por_id(self, id):
+        usuario = self.repository.buscar_por_id(id)
+            
+        if not usuario:
+            raise LookupError("Usuário não encontrado.")
+        
+        return usuario
+    
+    
+    def buscar_todos(self, nome, email, tipo):
+        usuarios = self.repository.buscar_todos(nome, email, tipo)
+        
+        if not usuarios:
+            raise LookupError("Usuários específicos não encontrados.")
+        
+        return usuarios
+    
+    
+    def deletar(self, id):
+        usuario = self.buscar_por_id(id)
+        
+        try:
+            self.repository.deletar(usuario)
+            self.repository.commit()
+            return usuario
+        
+        except Exception:
+            self.repository.rollback()
+            raise
+
+
+    def atualizar(self, id, dados):
+        usuario = self.buscar_por_id(id)
+        nome = dados.get("nome")
+        email = dados.get("email")
+        senha = dados.get("senha")
+        tipo = dados.get("tipo")
+        
+        if nome:
+            usuario.nome = nome
+        if email:
+            usuario.email = email
+        if senha:
+            usuario.senha = generate_password_hash(senha)
+        if tipo:
+            usuario.tipo = tipo
+        
+        try:
+            self.repository.atualizar(usuario)
+            self.repository.commit()
+            return usuario
+        
+        except Exception:
+            self.repository.rollback()
+            raise
+    
+    
+        
+            
+            
+        
+        
+            
+        
+            
+        
+        
+         

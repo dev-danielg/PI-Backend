@@ -18,10 +18,10 @@ class AuthController:
                 "message": str(e)
             }, 401
             
-        except Exception:
+        except Exception as e:
             return {
                 "success": False,
-                "message": "Erro interno no servidor."
+                "message": str(e)
             }, 500
         
         return {
